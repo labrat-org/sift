@@ -2,6 +2,7 @@ import streamlit as st
 import requests
 import json
 import pandas as pd
+import os
 
 # Constants
 DEFAULT_API_ENDPOINT = "http://localhost:8000/api/query"  # Default value
@@ -29,8 +30,8 @@ Enter your database connection string, SQL query, and other parameters below.
 
 # Input form
 with st.form("query_form"):
-    # API endpoint configuration - only show if running locally
-    if is_running_locally(DEFAULT_API_ENDPOINT):
+    # API endpoint configuration - only show if CONFIGURABLE_API_ENDPOINT is True
+    if os.getenv('CONFIGURABLE_API_ENDPOINT', 'true').lower() == 'true':
         api_endpoint = st.text_input(
             "API Endpoint",
             value=DEFAULT_API_ENDPOINT,
