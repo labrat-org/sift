@@ -6,6 +6,10 @@ import pandas as pd
 # Constants
 DEFAULT_API_ENDPOINT = "http://localhost:8000/api/query"  # Default value
 
+# Helper function to check if running locally
+def is_running_locally(url):
+    return any(local_host in url.lower() for local_host in ['localhost', '127.0.0.1'])
+
 # Page config
 st.set_page_config(
     page_title="🐀 Labrat SIFT Database Query Demo",
@@ -25,12 +29,15 @@ Enter your database connection string, SQL query, and other parameters below.
 
 # Input form
 with st.form("query_form"):
-    # API endpoint configuration
-    api_endpoint = st.text_input(
-        "API Endpoint",
-        value=DEFAULT_API_ENDPOINT,
-        help="The SIFT service endpoint URL"
-    )
+    # API endpoint configuration - only show if running locally
+    if is_running_locally(DEFAULT_API_ENDPOINT):
+        api_endpoint = st.text_input(
+            "API Endpoint",
+            value=DEFAULT_API_ENDPOINT,
+            help="The SIFT service endpoint URL"
+        )
+    else:
+        api_endpoint = DEFAULT_API_ENDPOINT
     
     # Database connection
     db_string = st.text_input(
