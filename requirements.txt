@@ -1,0 +1,2 @@
+-r sift/requirements.txt
+-r streamlit_demo/requirements.txt

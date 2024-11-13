@@ -1,0 +1,1 @@
+web: bash -c "uvicorn sift.sift:asgi --host=0.0.0.0 --port=8000 & streamlit run streamlit_demo/app.py --server.port=$PORT --server.address=0.0.0.0 --server.enableCORS=false --server.headless=true --browser.gatherUsageStats=false --server.enableStaticServing=true"
