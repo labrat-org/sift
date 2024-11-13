@@ -24,10 +24,13 @@ Enter your database connection string, SQL query, and other parameters below.
 # TEST_DB_STRING = 'postgres://reader:NWDMCE5xdipIjRrp@hh-pgsql-public.ebi.ac.uk:5432/pfmegrnargs'
 # TEST_QUERY_STRING = 'select * from django_admin_log limit 100;'  
 
+# Check if running in public mode
+is_public = os.getenv('IS_PUBLIC', 'true').lower() == 'true'
+
 # Input form
 with st.form("query_form"):
-    # API endpoint configuration - only show if CONFIGURABLE_API_ENDPOINT is True
-    if os.getenv('CONFIGURABLE_API_ENDPOINT', 'true').lower() == 'true':
+    # API endpoint configuration - only show if not public
+    if not is_public:
         api_endpoint = st.text_input(
             "API Endpoint",
             value=DEFAULT_API_ENDPOINT,
@@ -36,7 +39,12 @@ with st.form("query_form"):
     else:
         api_endpoint = DEFAULT_API_ENDPOINT
     
-    # Database connection
+    # Database connection - show public note only if in public mode
+    if is_public:
+        st.info(
+            "The default credentials below are for a public RNAcentral database (https://rnacentral.org/help/public-database). "
+            "Please be considerate with your usage! 🙏"
+        )
     db_string = st.text_input(
         "Database Connection String",
         value="postgres://reader:NWDMCE5xdipIjRrp@hh-pgsql-public.ebi.ac.uk:5432/pfmegrnargs"
@@ -51,7 +59,16 @@ with st.form("query_form"):
     # Additional parameters
     col1, col2, col3 = st.columns(3)
     with col1:
-        limit = st.number_input("Result Limit", min_value=1, value=10)
+        limit = st.number_input(
+            "Result Limit", 
+            min_value=1, 
+            value=10,
+            disabled=is_public,
+        )
+        # Override limit if public
+        if is_public:
+            limit = 10
+    
     with col2:
         format_type = st.selectbox(
             "Output Format",
@@ -77,8 +94,8 @@ if submit_button:
             payload = {
                 "db_string": db_string,
                 "query": query,
-                "limit": limit,
-                "format": "json" if format_type == "Table View" else format_type  # Always send json for Table View
+                "limit": 10 if is_public else limit,  # Enforce limit of 10 for public mode
+                "format": "json" if format_type == "Table View" else format_type
             }
             
             # Add parameters if provided
