@@ -1,0 +1,5 @@
+nanodjango
+uvicorn
+pandas
+asyncpg
+tabulate
