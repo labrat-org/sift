@@ -30,11 +30,11 @@ async def execute_postgres_query(db_string, query, params=None, limit=10):
     """
     conn = await asyncpg.connect(
         db_string,
-        timeout=10.0,  # Connection timeout in seconds
-        command_timeout=5.0,  # Query execution timeout in seconds
-        server_settings={
-            'statement_timeout': '5000'  # Milliseconds
-        }
+        # timeout=10.0,  # Connection timeout in seconds
+        # command_timeout=5.0,  # Query execution timeout in seconds
+        # server_settings={
+        #     'statement_timeout': '5000'  # Milliseconds
+        # }
     )
     try:
         async with conn.transaction():
