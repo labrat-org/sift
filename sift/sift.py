@@ -10,7 +10,7 @@ import asyncpg
 
 # Constants and configuration
 app = Django()
-
+asgi = app.asgi
 
 # # A Public Postres SQL database of RNA sequence data and their django admin log data for the site 
 # # Some test data in case you don't have your own postgres database
@@ -104,3 +104,11 @@ async def async_postgres_query_view(request):
         
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=400)
+
+# Create the ASGI application with proper wrapper
+async def asgi(scope, receive, send):
+    return await app.asgi(scope, receive, send)
+
+# Optional: Keep the run block for development
+if __name__ == "__main__":
+    app.run()
