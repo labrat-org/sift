@@ -7,14 +7,10 @@ import os
 # Constants
 DEFAULT_API_ENDPOINT = "http://localhost:8000/api/query"  # Default value
 
-# Helper function to check if running locally
-def is_running_locally(url):
-    return any(local_host in url.lower() for local_host in ['localhost', '127.0.0.1'])
-
 # Page config
 st.set_page_config(
-    page_title="🐀 Labrat Sift Database Query Demo",
-    page_icon="🐀",
+    page_title="Labrat Sift Database Query Demo",
+    page_icon=os.path.join(os.path.dirname(__file__), "favicon.png"),
     layout="wide"
 )
 
