@@ -12,15 +12,15 @@ def is_running_locally(url):
 
 # Page config
 st.set_page_config(
-    page_title="🐀 Labrat SIFT Database Query Demo",
+    page_title="🐀 Labrat Sift Database Query Demo",
     page_icon="🐀",
     layout="wide"
 )
 
 # Title and description
-st.title("🐀 Labrat SIFT Database Query Demo")
+st.title("🐀 Labrat Sift Database Query Demo")
 st.markdown("""
-This demo allows you to execute PostgreSQL queries through the SIFT microservice.
+This demo allows you to execute PostgreSQL queries through the Sift microservice.
 Enter your database connection string, SQL query, and other parameters below.
 """)
 
@@ -34,7 +34,7 @@ with st.form("query_form"):
         api_endpoint = st.text_input(
             "API Endpoint",
             value=DEFAULT_API_ENDPOINT,
-            help="The SIFT service endpoint URL"
+            help="The Sift service endpoint URL"
         )
     else:
         api_endpoint = DEFAULT_API_ENDPOINT
@@ -189,7 +189,7 @@ if submit_button:
                     language="bash"
                 )
 
-            # Make request to SIFT service
+            # Make request to Sift service
             with st.spinner("Executing query..."):
                 response = requests.post(api_endpoint, json=payload)
 
