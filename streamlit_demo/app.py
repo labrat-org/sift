@@ -8,13 +8,13 @@ DEFAULT_API_ENDPOINT = "http://localhost:8000/api/query"  # Default value
 
 # Page config
 st.set_page_config(
-    page_title="SIFT Database Query Demo",
-    page_icon="🔍",
+    page_title="🐀 Labrat SIFT Database Query Demo",
+    page_icon="🐀",
     layout="wide"
 )
 
 # Title and description
-st.title("🔍 SIFT Database Query Demo")
+st.title("🐀 Labrat SIFT Database Query Demo")
 st.markdown("""
 This demo allows you to execute PostgreSQL queries through the SIFT microservice.
 Enter your database connection string, SQL query, and other parameters below.
@@ -84,6 +84,103 @@ if submit_button:
                 except json.JSONDecodeError:
                     st.error("Invalid JSON in parameters field")
                     st.stop()
+
+            # Display equivalent API request examples
+            st.subheader("Sample API Requests")
+            tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([
+                "python-requests",  # Most common Python library
+                "python-httplib",    # Standard Python
+                "js-async",        # Modern JavaScript
+                "js-promises",     # Traditional JavaScript
+                "curl",            # CLI tools
+                "httpie",          # CLI tools
+            ])
+            
+            # Prepare payloads
+            curl_payload = json.dumps(payload).replace('"', '\\"')
+            pretty_payload = json.dumps(payload, indent=2)
+            
+            with tab1:
+                st.code(
+                    f'import requests\n\n'
+                    f'url = "{api_endpoint}"\n'
+                    f'headers = {{"Content-Type": "application/json"}}\n'
+                    f'payload = {pretty_payload}\n\n'
+                    f'response = requests.post(url, json=payload)\n'
+                    f'data = response.json()',
+                    language="python"
+                )
+
+            with tab2:
+                st.code(
+                    f'import json\n'
+                    f'from urllib import request\n\n'
+                    f'url = "{api_endpoint}"\n'
+                    f'headers = {{"Content-Type": "application/json"}}\n'
+                    f'payload = {pretty_payload}\n\n'
+                    f'data = json.dumps(payload).encode("utf-8")\n'
+                    f'req = request.Request(url, data=data, headers=headers, method="POST")\n'
+                    f'with request.urlopen(req) as response:\n'
+                    f'    data = json.loads(response.read().decode("utf-8"))',
+                    language="python"
+                )
+
+            with tab3:
+                st.code(
+                    f'const url = "{api_endpoint}";\n'
+                    f'const payload = {pretty_payload};\n\n'
+                    f'async function queryDatabase() {{\n'
+                    f'    try {{\n'
+                    f'        const response = await fetch(url, {{\n'
+                    f'            method: "POST",\n'
+                    f'            headers: {{\n'
+                    f'                "Content-Type": "application/json"\n'
+                    f'            }},\n'
+                    f'            body: JSON.stringify(payload)\n'
+                    f'        }});\n'
+                    f'        const data = await response.json();\n'
+                    f'        console.log(data);\n'
+                    f'    }} catch (error) {{\n'
+                    f'        console.error("Error:", error);\n'
+                    f'    }}\n'
+                    f'}}\n\n'
+                    f'// Call the function\n'
+                    f'queryDatabase();',
+                    language="javascript"
+                )
+
+            with tab4:
+                st.code(
+                    f'const url = "{api_endpoint}";\n'
+                    f'const payload = {pretty_payload};\n\n'
+                    f'fetch(url, {{\n'
+                    f'    method: "POST",\n'
+                    f'    headers: {{\n'
+                    f'        "Content-Type": "application/json"\n'
+                    f'    }},\n'
+                    f'    body: JSON.stringify(payload)\n'
+                    f'}})\n'
+                    f'    .then(response => response.json())\n'
+                    f'    .then(data => console.log(data))\n'
+                    f'    .catch(error => console.error("Error:", error));',
+                    language="javascript"
+                )
+
+            with tab5:
+                st.code(
+                    f'curl -X POST {api_endpoint} \\\n'
+                    f'     -H "Content-Type: application/json" \\\n'
+                    f'     -d "{curl_payload}"',
+                    language="bash"
+                )
+            
+            with tab6:
+                st.code(
+                    f'http POST {api_endpoint} \\\n'
+                    f'    Content-Type:application/json \\\n'
+                    f'    {pretty_payload}',
+                    language="bash"
+                )
 
             # Make request to SIFT service
             with st.spinner("Executing query..."):
